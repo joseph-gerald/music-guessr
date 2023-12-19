@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicGuessr</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik Scribble:wght@400,500,800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:wght@400;500,800&display=swap">
+    <script src="https://thisisadomain.lol/scripts/fp.js"></script>
+    <script src="script/index.js" defer></script>
+</head>
+<body>
+    <div class="content">
+        <div class="new hidden">
+            <h1>What should we call you?</h1>
+            <input type="text" class="input" id="name" placeholder="Name">
+            <button id="submit-name" class="button">Submit</button>
+        </div>
+
+        <div class="play hidden">
+            <h1>Are you</h1>
+            <div class="play-actions">
+                <h2 id="create" class="accent-to-primary-text">Creating</h2>
+                or
+                <h2 id="join" class="accent-to-primary-text">Joining</h2>
+            </div>
+            <h1>
+                a game?
+            </h1>
+        </div>
+
+        <div class="create hidden">
+            <h1>Creating Room...</h1>
+        </div>
+
+        <div class="join hidden">
+            <h2 id="join-status"></h2>
+            <h1>Enter the code</h1>
+            <input type="text" class="input" id="code" placeholder="Code" maxlength="4">
+            <button id="submit-code" class="button">Join Room</button>
+        </div>
+
+        <div class="waiting hidden">
+            <h1>Waiting for host...</h1>
+            <div class="players">
+                <h2>Players</h2>
+                <b>Player</b>
+            </div>
+        </div>
+
+        <div class="game hidden">
+            <div class="music-finder">
+                <h1 id="music-finder-title">Choose a song for the game</h1>
+                <input type="text" id="music-query" class="input" placeholder="e.g Call Me Mabye">
+
+                <div class="music-list">
+                    
+                </div>
+            </div>
+
+            <div class="players-status hidden">
+                <div class="players">
+                    <h2>Players Done</h2>
+                    <div class="players-done">
+
+                    </div>
+                    <h2>Players Still choosing</h2>
+                    <div class="players-choosing">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="music-player hidden">
+                <h1 class="question-text">What is the name of this song?</h1>
+                <button id="answer-question" class="button">
+                    Click to Answer
+                </button>
+            </div>
+
+            <div class="score-viewer hidden">
+                <h1>Scores</h1>
+                <div class="scores">
+                    <div class="player-score-item">
+                        <b class="player-name">Player /</b>
+                        <b class="player-total-score">300</b>
+                        +
+                        <b class="player-score">50</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="loading-card">
+        <h1 class="loading-title">
+            o
+        </h1>
+    </div>
+</body>
+</html>

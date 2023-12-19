@@ -1,0 +1,309 @@
+:root {
+    --text: #1a0f10;
+    --background: #faf5f6;
+    --primary: #5c3339;
+    --secondary: #c1a390;
+    --accent: #836c49;
+}
+
+:root[data-theme="dark"] {
+    --text: #f0e5e6;
+    --background: #0a0506;
+    --primary: #cca3a9;
+    --secondary: #6f513e;
+    --accent: #b69f7c;
+}
+
+.content {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: 'Rubik Scribble', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+h2,
+h1 {
+    margin: 0;
+}
+
+.new h1 {
+    margin: 0 0 10px 0;
+}
+
+.new {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    border: none;
+    border-bottom: var(--accent) 2px solid;
+    background-color: transparent;
+
+    font-family: inherit;
+    font-weight: bold;
+
+    outline: none;
+
+    font-size: 2rem;
+    padding: 0;
+
+    width: 100%;
+}
+
+.input::placeholder {
+    color: var(--accent);
+}
+
+.input:focus {
+    border-bottom: var(--primary) 2px solid;
+}
+
+.button {
+    border: none;
+    border-radius: 5px;
+    background-color: var(--accent);
+    color: var(--background);
+
+    font-family: "Poppins";
+    font-weight: bold;
+
+    outline: none;
+
+    font-size: 1.2rem;
+
+    padding: 5px 10px;
+    margin: 10px 0;
+    opacity: 0.75;
+
+    width: 100%;
+}
+
+.button:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+    opacity: 0.85;
+}
+
+.play-actions {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    font-family: "Poppins";
+
+    font-weight: bold;
+}
+
+.play-actions>h2 {
+    transition-duration: 250ms;
+}
+
+.play-actions>h2:hover {
+    transform: scale(1.1);
+    filter: grayscale(0.5);
+}
+
+.accent-to-primary-text {
+    background: -webkit-linear-gradient(var(--accent), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.join,
+.play {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+}
+
+#join-status {
+    position: absolute;
+
+    top: -30px;
+
+    font-family: "Poppins";
+
+    font-weight: bold;
+
+    font-size: 1.2rem;
+
+    color: var(--accent);
+}
+
+.player {
+    font-family: "Poppins";
+}
+
+.music-list {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 20px;
+
+    gap: 10px;
+
+    height: calc(100vh - 200px);
+
+    overflow-y: auto;
+}
+
+.music-thumb {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.music-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 5px;
+
+    border-radius: 10px;
+
+    animation: pop-in 0.4s ease-in-out;
+
+    transition-duration: 300ms;
+}
+
+.music-item:hover {
+    cursor: pointer;
+    filter: brightness(0.8);
+}
+
+.music-item:hover::after {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    content: "Click to Select";
+    position: absolute;
+    font-family: "Poppins";
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    border-radius: 5px;
+}
+
+.player.choosing {
+    color: lightcoral;
+}
+
+.player.done {
+    color: lightseagreen;
+}
+
+@keyframes pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotateX(180deg);
+        filter: blur(10px);
+    }
+
+    70% {
+        transform: scale(0.9) rotateX(45deg);
+        opacity: 1;
+        filter: blur(0px);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.music-info>* {
+    margin: 0;
+    font-family: "Poppins";
+}
+
+@media screen and (max-width: 600px) {
+
+    .new {
+        width: calc(100% - 40px);
+    }
+
+    h1 {
+        font-size: 6.5vw;
+        width: fit-content;
+    }
+}
+
+
+.hidden {
+    display: none;
+}
+
+.loading-card {
+    bottom: 0;
+    opacity: 1;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: blur(0px);
+    user-select: none;
+    background-color: var(--background);
+}
+
+.slide-out,
+.slide-in.slide-out {
+    filter: blur(30px);
+    background-color: transparent;
+    opacity: 0;
+    transform: rotate(90deg);
+    transition-duration: 0.5s;
+}
+
+.hidden.slide-in {
+    display: block;
+    filter: blur(30px);
+    transform: rotate(-90deg);
+    opacity: 0;
+}
+
+.slide-in {
+    filter: blur(0px);
+    opacity: 1;
+    transition-duration: .5s;
+}
+
+.loading-card .loading-title {
+    scale: 100%;
+}
+
+.loading-card.slide-out .loading-title {
+    scale: 150%;
+    transition-delay: 0.1s;
+    transition-duration: 0.5s;
+}
