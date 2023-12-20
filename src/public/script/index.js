@@ -129,9 +129,7 @@ socket.onopen = () => {
                 if (action == "start") {
                     musicFinderTitle.innerText = "Choose a song for the game";
 
-                    await hideElm(scoreViewer);
-                    showElm(musicFinder);
-                    
+                    showPage(state = "play");
                     socketState = "playing";
 
                     musicList.innerHTML = "Please type something";
