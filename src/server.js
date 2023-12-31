@@ -75,6 +75,12 @@ class Room {
         const position = this.players.indexOf(player);
         this.players.splice(position, 1);
         this.broadcastToRoom({ action: "players", payload: this.players.map(x => x.name) });
+
+        if (player == this.host) return this.broadcastToRoom({ action: "end", payload: "host left" })
+
+        if (this.state == "waiting") return;
+        
+        if (this.players.length < 2) return this.broadcastToRoom({ action: "end", payload: "insufficient amount of players" })
     }
 
     broadcastToRoom(data) {

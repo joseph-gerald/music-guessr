@@ -14,6 +14,7 @@
     --accent: #b69f7c;
 }
 
+.error,
 .content {
     position: fixed;
     width: 100vw;
@@ -239,6 +240,14 @@ h1 {
 
 .player.done {
     color: lightseagreen;
+}
+
+.error {
+    font-family: "Poppins";
+}
+
+.error > * {
+    margin: 2px;
 }
 
 @keyframes pop-in {

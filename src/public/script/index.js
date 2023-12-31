@@ -36,6 +36,10 @@ const answerQuestion = document.getElementById("answer-question");
 const scoreViewer = document.querySelector(".score-viewer");
 const scores = document.querySelector(".scores");
 
+const contentDiv = document.querySelector(".content");
+const errorPage = document.querySelector(".error");
+const errorText = document.getElementById("error-text");
+
 const isLocalhost = window.location.host.indexOf("localhost") == 0;
 const protocol = isLocalhost ? "ws://" : "wss://";
 
@@ -53,7 +57,7 @@ let socketState = "initial";
 
 let roomData = {
     code: null,
-    players: [],
+    players: []
 }
 
 const socket = new WebSocket(protocol + window.location.host);
@@ -72,6 +76,24 @@ socket.onopen = () => {
     socket.onmessage = async (event) => {
         console.log(event.data);
         const { action, payload } = JSON.parse(event.data);
+
+        if (action == "players") roomData.players = payload;
+
+        if (action == "end") {
+            errorText.innerText = payload;
+
+            contentDiv.classList.add("slide-out")
+
+            errorPage.classList.add("slide-in");
+            errorPage.classList.remove("slide-out");
+
+            await sleep(50);
+            errorPage.classList.remove("hidden");
+
+            await sleep(1000);
+
+            return location.reload();
+        }
 
         switch (socketState) {
             case "initial":
@@ -103,32 +125,32 @@ socket.onopen = () => {
                 }
                 break;
             case "waitingForGame":
-                if (action == "submissions") {
-                    const submissions = roomData.submissions = JSON.parse(payload);
-                    const playersNotDone = roomData.players.filter(player => !submissions.includes(player));
-
-                    playersChoosing.innerHTML = (playersNotDone.length == 0 ? "No one" :
-                        playersNotDone
-                            .map(player => `<b class="player choosing">${player}</b>`).join("")
-                    );
-
-                    playersDone.innerHTML = submissions.map(player => `<b class="player done">${player}</b>`).join("");
-                } else if (action == "start_game") {
+                if (action == "start_game") {
                     socketState = "waitingForQuestion";
                     socket.send(JSON.stringify({ action: "get_question" }));
 
                     await hideElm(playersStatus);
                     showElm(musicPlayer);
+
+                    break;
+                } else if (action == "submissions") {
+                    roomData.submissions = JSON.parse(payload);
                 }
+                
+                const submissions = roomData.submissions;
+
+                const playersNotDone = roomData.players.filter(player => !submissions.includes(player));
+
+                playersChoosing.innerHTML = (playersNotDone.length == 0 ? "No one" :
+                    playersNotDone
+                        .map(player => `<b class="player choosing">${player}</b>`).join("")
+                );
+
+                playersDone.innerHTML = submissions.map(player => `<b class="player done">${player}</b>`).join("");
                 break;
             case "waitingForStart":
-                if (action == "players") {
-                    const playersDiv = document.querySelector(".players");
-                    roomData.players = payload;
-
-                    playersDiv.innerHTML = payload.map(player => `<b class="player">${player}</b>`).join("");
-                }
-
+                const playersDiv = document.querySelector(".players");
+                
                 if (action == "start") {
                     musicFinderTitle.innerText = "Choose a song for the game";
 
@@ -139,6 +161,8 @@ socket.onopen = () => {
                     musicQuery.value = "";
                     musicQuery.focus();
                 }
+
+                playersDiv.innerHTML = payload.map(player => `<b class="player">${player}</b>`).join("");
                 break;
             case "waitingForQuestion":
                 if (action == "question") {
