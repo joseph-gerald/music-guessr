@@ -189,9 +189,9 @@ socket.onopen = () => {
                         const template = `
                         <div class="player-score-item">
                             <b class="player-name">${player} /</b>
-                            <b class="player-total-score">${score - roundScore}</b>
+                            <b class="player-total-score">${score - (roundScore == -1 ? 0 : roundScore)}</b>
                             +
-                            <b class="player-score">${roundScore}</b>
+                            <b class="player-score">${roundScore == -1 ? "⌛" : roundScore}</b>
                         </div>
                         `
 

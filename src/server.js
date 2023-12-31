@@ -182,7 +182,7 @@ function handleConnection(client, request) {
                     }
 
                     player.room.scores[player.name] ??= 0;
-                    round.scores[player.name] = 0;
+                    round.scores[player.name] = -1;
                     break;
                 case "submit_answer":
                     round = player.room.rounds[player.room.rounds.length - 1];
