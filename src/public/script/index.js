@@ -77,6 +77,8 @@ socket.onopen = () => {
         console.log(event.data);
         const { action, payload } = JSON.parse(event.data);
 
+        if (action == "clear") localStorage.clear();
+
         if (action == "players") roomData.players = payload;
 
         if (action == "end") {
@@ -415,7 +417,6 @@ code.addEventListener("keydown", (e) => {
 
 joinSubmit.addEventListener("click", () => {
     if (joinCode.value.length == 4 && !isNaN(joinCode.value)) {
-        localStorage.setItem("code", joinCode.value);
         joinRoom();
     } else {
         joinStatus.innerText = joinCode.value.length != 4 ? "Code Too Short" : "Only Numbers Allowed";
@@ -423,6 +424,8 @@ joinSubmit.addEventListener("click", () => {
 });
 
 submitName.addEventListener("click", () => {
+    nameInput.value = nameInput.value.replaceAll(/\p{Emoji}/ug, "");
+
     if (nameInput.value !== "") {
         localStorage.setItem("username", nameInput.value);
         username = localStorage.getItem("username");

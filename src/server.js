@@ -3,6 +3,7 @@ let players = [];
 let rooms = [];
 
 const emojis = [..."😷🤒🤕🤢🤮🤧😢😭😨🤯🥵🥶🤑😴🥰🤣🤡💀👽👾🤖👶💋❤️💔💙💚💛🧡💜🖤💤💢💣💥💦💨💫👓💍💎👑🎓🧢💄💍💎🐵🦒🐘🐀🍆🍑🍒🍓⚽🎯🔊🔇🔋🔌💻💰💯"];
+const emojiPattern = /\p{Emoji}/u;
 
 function getEmojiIndex(string) {
     const index = string.split("").map(x => x.charCodeAt()).reduce((a, b) => a + b);
@@ -117,9 +118,27 @@ function handleConnection(client, request) {
     }
 
     function onMessage(data) {
+        if (data.indexOf("keepalive") == 0) {
+            const count = data.split("/")[1];
+
+            if (isNaN(parseInt(count))) throw Error("Invalid Keepalive");
+
+            return;
+        }
+
         if (player == null) {
             try {
                 const { username, fp } = JSON.parse(data);
+
+                // detect hackermen with emojis in their usernames 
+                if (emojiPattern.test(username)) {
+                    client.send(JSON.stringify({
+                        action: "clear"
+                    }))
+
+                    return client.close();
+                }
+
                 player = new Player(username, fp, ip, client)
 
                 // client setup
@@ -134,14 +153,6 @@ function handleConnection(client, request) {
             } catch (e) {
                 client.close();
             }
-            return;
-        }
-
-        if (data.indexOf("keepalive") == 0) {
-            const count = data.split("/")[1];
-
-            if (isNaN(parseInt(count))) throw Error("Invalid Keepalive");
-
             return;
         }
 
