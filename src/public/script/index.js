@@ -294,7 +294,9 @@ musicQuery.addEventListener("keydown", async (e) => {
         musicFinderTitle.innerText = "Choose a song for the game";
 
         for (const item of data) {
-            const { id, title, artist_names, thumbnail_url } = item;
+            const { id, title, artist_names, thumbnail_url, preview } = item;
+
+            if (!preview) continue;
 
             const div = document.createElement("div");
 
