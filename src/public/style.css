@@ -72,6 +72,10 @@ h1 {
     border-bottom: var(--primary) 2px solid;
 }
 
+.poppins {
+    font-family: "Poppins";
+}
+
 .button {
     border: none;
     border-radius: 5px;
@@ -213,6 +217,22 @@ h1 {
     border-radius: 5px;
 }
 
+.host-wait {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 20px;
+}
+
+.waiting .players {
+    display: flex;
+    gap: 10px;
+
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
 .player.choosing {
     color: lightcoral;
 }
@@ -247,6 +267,10 @@ h1 {
 
 @media screen and (max-width: 600px) {
 
+    .waiting,
+    .game,
+    .join,
+    .play,
     .new {
         width: calc(100% - 40px);
     }

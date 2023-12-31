@@ -63,8 +63,11 @@ socket.onclose = () => {
 }
 
 socket.onopen = () => {
+    let keepaliveCount = 0;
+
     console.log("connected");
 
+    setInterval(() => { socket.send("keepalive/"+keepaliveCount++); }, 60 * 1000);
 
     socket.onmessage = async (event) => {
         console.log(event.data);
@@ -175,7 +178,35 @@ socket.onopen = () => {
                         musicList.innerHTML = "Please Wait...";
                     }
                 }
+
+                if ("ready|next_round".split("|").includes(action)) {
+                    (async () => {
+                        const oldAudio = audio
+                        for (let i = 0; i < 10; i++) {
+                            oldAudio.volume -= 0.05;
+                            await sleep(50);
+                        }
+
+                        oldAudio.pause();
+                    })();
+
+                    if (action == "next_round") {
+                        socketState = "waitingForScore";
+
+                        socket.onmessage({
+                            data: JSON.stringify({
+                                action: "next_round"
+                            })
+                        })
+                        break;
+                    }
+
+                    await hideElm(musicPlayer);
+                    socket.send(JSON.stringify({ action: "get_question" }));
+                    await showElm(musicPlayer);
+                }
                 break;
+            
             case "waitingForScore":
                 if (action == "score") {
                     const { total, round } = payload;
@@ -208,6 +239,13 @@ socket.onopen = () => {
                         }
 
                         scores.appendChild(nextButton);
+                    } else {
+                        const info = document.createElement("b");
+
+                        info.innerText = "Waiting for host....";
+                        info.classList.add("host-wait");
+
+                        scores.appendChild(info);
                     }
                 }
 
@@ -222,6 +260,7 @@ socket.onopen = () => {
                 if (action == "next_round") {
                     musicFinderTitle.innerText = "Choose a song for the game";
 
+                    hideElm(musicPlayer);
                     await hideElm(scoreViewer);
                     showElm(musicFinder);
                     
@@ -339,8 +378,8 @@ createGame.addEventListener("click", () => {
     showPage(state = "create");
 });
 
-joinGame.addEventListener("click", () => {
-    showPage(state = "join");
+joinGame.addEventListener("click", async () => {
+    await showPage(state = "join");
     joinCode.focus();
 });
 
@@ -420,7 +459,7 @@ async function showPage() {
             break;
         case "join":
             await removeElm(playSection);
-            showElm(joinSection);
+            await showElm(joinSection);
             break;
         case "waiting":
             let promises = [removeElm(createSection), removeElm(joinSection)];
@@ -428,24 +467,14 @@ async function showPage() {
             await Promise.all(promises);
             showElm(waitingSection);
 
-            if (roomData.isHost) {
-                waitingSection.innerHTML = `
-                    <h1>Code: ${roomData.code}</h1>
-                    <h2>Players</h2>
-                    <div class="players">
-                        ${roomData.players.map(player => `<b class="player">${player}</b>`)}
-                    </div>
-                    <button onclick="startRoom()" class="button">Start</button>
-                `;
-            } else {
-                waitingSection.innerHTML = `
-                    <h1>Waiting for Host</h1>
-                    <h2>Code: ${roomData.code}</h2>
-                    <div class="players">
-                        ${roomData.players.map(player => `<b class="player">${player}</b>`)}
-                    </div>
-                `;
-            }
+            waitingSection.innerHTML = `
+                <h1>Code: ${roomData.code}</h1>
+                <h2>Players</h2>
+                <div class="players">
+                    ${roomData.players.map(player => `<b class="player">${player}</b> `).join("")}
+                </div>
+            ` + (roomData.isHost ? '<button onclick="startRoom()" class="button">Start</button>' : '<button disabled class="button">Waiting for host to start...</button>');
+            
             break;
         case "play":
             musicQuery.value = "";
@@ -465,3 +494,5 @@ window.addEventListener('load', () => {
 });
 
 showPage();
+
+nameInput.focus();

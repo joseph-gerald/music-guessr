@@ -1,3 +1,5 @@
+const e = require("express");
+
 let clients = [];
 let players = [];
 let rooms = [];
@@ -119,6 +121,16 @@ function handleConnection(client, request) {
             return;
         }
 
+        if (data.indexOf("keepalive") == 0) {
+            const count = data.split("/")[1];
+
+            if (isNaN(parseInt(count))) throw Error("Invalid Keepalive");
+
+            console.log("Count: " + count)
+
+            return;
+        }
+
         const parsed = JSON.parse(data);
         const { action, payload } = parsed;
         let round = null;
@@ -218,7 +230,14 @@ function handleConnection(client, request) {
         }
     }
 
-    client.on('message', onMessage);
+    client.on('message', data => {
+        try {
+            onMessage(data.toString())
+        } catch (error) {
+            client.close();
+            console.log(error)
+        }
+    });
     client.on('close', onClose);
 }
 
