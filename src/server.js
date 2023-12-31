@@ -108,7 +108,10 @@ function handleConnection(client, request) {
     function onClose() {
         var position = clients.indexOf(client);
         clients.splice(position, 1);
-        console.log("connection closed");
+
+        if (!player) return;
+
+        console.log(`Connection Closed ( ${player.name} ) @ ${ ip }`);
 
         if (player && player.room) {
             player.room.removePlayer(player);
@@ -121,6 +124,8 @@ function handleConnection(client, request) {
                 const { username, fp } = JSON.parse(data);
                 player = new Player(username, fp, ip, client)
                 client.send(JSON.stringify({ action: "emoji", payload: player.emoji }));
+
+                console.log(`Connection Opened ( ${player.name} ) @ ${ ip }`);
             } catch (e) {
                 client.close();
             }
