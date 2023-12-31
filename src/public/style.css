@@ -274,7 +274,7 @@ h1 {
     font-family: "Poppins";
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 870px) {
 
     .waiting,
     .game,

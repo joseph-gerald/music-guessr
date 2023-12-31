@@ -50,7 +50,7 @@ let audio = null;
 
 let isHost = false;
 
-const QUERY_API = "https://genius.worker.jooo.tech/?q=";
+let QUERY_API = "";
 
 let state = "initial";
 let socketState = "initial";
@@ -97,9 +97,9 @@ socket.onopen = () => {
 
         switch (socketState) {
             case "initial":
-                if (action === "emoji") {
-                    console.log(payload)
-                    username += " " + payload;
+                if (action === "setup") {
+                    username += " " + payload.emoji;
+                    QUERY_API = `//${payload.query}`;
                 }
                 break;
             case "joiningCode":
@@ -162,7 +162,7 @@ socket.onopen = () => {
                     musicQuery.focus();
                 }
 
-                playersDiv.innerHTML = payload.map(player => `<b class="player">${player}</b>`).join("");
+                playersDiv.innerHTML = roomData.players.map(player => `<b class="player">${player}</b>`).join("");
                 break;
             case "waitingForQuestion":
                 if (action == "question") {

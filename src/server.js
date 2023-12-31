@@ -1,5 +1,3 @@
-const e = require("express");
-
 let clients = [];
 let players = [];
 let rooms = [];
@@ -48,7 +46,7 @@ class Round {
         const wasRight = correct.preview == answer.preview;
         const timestamp = Date.now();
         if (this.first_timestamp == -1) this.first_timestamp = timestamp;
-        const score = wasRight ? 1100 - Math.max(Math.round((timestamp - this.first_timestamp) * 0.05),100) : 0;
+        const score = wasRight ? 1100 - Math.max(Math.round((timestamp - this.first_timestamp) * 0.05), 100) : 0;
 
         this.answers.push({ player, answer, correct, timestamp, score });
 
@@ -79,7 +77,7 @@ class Room {
         if (player == this.host) return this.broadcastToRoom({ action: "end", payload: "host left" })
 
         if (this.state == "waiting") return;
-        
+
         if (this.players.length < 2) return this.broadcastToRoom({ action: "end", payload: "insufficient amount of players" })
     }
 
@@ -111,7 +109,7 @@ function handleConnection(client, request) {
 
         if (!player) return;
 
-        console.log(`Connection Closed ( ${player.name} ) @ ${ ip }`);
+        console.log(`Connection Closed ( ${player.name} ) @ ${ip}`);
 
         if (player && player.room) {
             player.room.removePlayer(player);
@@ -123,9 +121,16 @@ function handleConnection(client, request) {
             try {
                 const { username, fp } = JSON.parse(data);
                 player = new Player(username, fp, ip, client)
-                client.send(JSON.stringify({ action: "emoji", payload: player.emoji }));
 
-                console.log(`Connection Opened ( ${player.name} ) @ ${ ip }`);
+                // client setup
+                client.send(JSON.stringify({
+                    action: "setup", payload: {
+                        emoji: player.emoji,
+                        query: process.env.MUSIC_QUERY_API
+                    }
+                }));
+
+                console.log(`Connection Opened ( ${player.name} ) @ ${ip}`);
             } catch (e) {
                 client.close();
             }
@@ -136,8 +141,6 @@ function handleConnection(client, request) {
             const count = data.split("/")[1];
 
             if (isNaN(parseInt(count))) throw Error("Invalid Keepalive");
-
-            console.log("Count: " + count)
 
             return;
         }
