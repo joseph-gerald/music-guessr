@@ -22,8 +22,11 @@ npm run dev
 
 .env
 ```js
-// music query api / example output -> https://genius.worker.jooo.tech/?q=Call Me Mabye
-MUSIC_QUERY_API="genius.worker.jooo.tech/?q="
+// song query api / example output -> https://genius.worker.jooo.tech/?song=Call Me Mabye
+SONG_QUERY_API="genius.worker.jooo.tech/?song="
+
+// artist query api / example output -> https://genius.worker.jooo.tech/?artist=Carly Rae Jepsen
+ARTIST_QUERY_API="genius.worker.jooo.tech/?artist="
 ```
 
 ## Features
