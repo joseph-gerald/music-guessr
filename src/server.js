@@ -145,7 +145,10 @@ function handleConnection(client, request) {
                 client.send(JSON.stringify({
                     action: "setup", payload: {
                         emoji: player.emoji,
-                        query: process.env.MUSIC_QUERY_API
+                        query: {
+                            song: process.env.SONG_QUERY_API,
+                            artist: process.env.ARTIST_QUERY_API
+                        }
                     }
                 }));
 

@@ -50,7 +50,8 @@ let audio = null;
 
 let isHost = false;
 
-let QUERY_API = "";
+let SONG_QUERY_API = "";
+let ARTIST_QUERY_API = "";
 
 let state = "initial";
 let socketState = "initial";
@@ -101,7 +102,9 @@ socket.onopen = () => {
             case "initial":
                 if (action === "setup") {
                     username += " " + payload.emoji;
-                    QUERY_API = `//${payload.query}`;
+                    
+                    SONG_QUERY_API   = `//${payload.query.song}`;
+                    ARTIST_QUERY_API = `//${payload.query.artist}`;
                 }
                 break;
             case "joiningCode":
@@ -342,7 +345,7 @@ musicQuery.addEventListener("keydown", async (e) => {
 
     if (lastMusicQuery) clearTimeout(lastMusicQuery);
 
-    const res = fetch(QUERY_API + value, {
+    const res = fetch(SONG_QUERY_API + value, {
         method: "POST"
     });
 
